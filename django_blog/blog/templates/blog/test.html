@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load blog_extras %}
+{% block content %}
+
+<div>
+    huy
+    {{test}}
+</div>
+{% for i in test %}
+    <div> {{test|todict:i}} </div>
+{% endfor %}
+
+{% endblock %}
