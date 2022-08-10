@@ -34,3 +34,7 @@ def post_detail(request, slug):
 def test(request):
     test = {1: "a", 2:"b", 3: "c"}
     return render(request, 'blog/test.html', context = {"test": test})
+
+def get_ip(request):
+    from django.http import HttpResponse
+    return HttpResponse(request.META['REMOTE_ADDR'])

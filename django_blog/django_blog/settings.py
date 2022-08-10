@@ -1,7 +1,7 @@
 
 from pathlib import Path
 from configurations import Configuration, values
-
+import dj_database_url
 class Dev(Configuration):
 
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -11,7 +11,7 @@ class Dev(Configuration):
     SECRET_KEY = 'i(bp&nx1mmggxm(zb+kmq4n93n(s1+4kk$9_)0$gh*vlp=ae0='
 
     # SECURITY WARNING: don't run with debug turned on in production!
-    DEBUG = True
+    DEBUG = values.BooleanValue(True)
 
     ALLOWED_HOSTS = []
 
@@ -19,6 +19,7 @@ class Dev(Configuration):
     # Application definition
 
     INSTALLED_APPS = [
+        'debug_toolbar',
         'django.contrib.admin',
         'django.contrib.auth',
         'django.contrib.contenttypes',
@@ -30,6 +31,7 @@ class Dev(Configuration):
     ]
 
     MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
         'django.middleware.security.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -69,7 +71,12 @@ class Dev(Configuration):
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        },
+        "default":
+            dj_database_url.config(default=f"sqlite:///{BASE_DIR}/db.sqlite3"),
+            "alternative": dj_database_url.config(
+                "ALTERNATIVE_DATABASE_URL",
+                default=f"sqlite:///{BASE_DIR}/alternative_db.sqlite3")
     }
 
 
@@ -110,3 +117,9 @@ class Dev(Configuration):
     # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
     STATIC_URL = '/static/'
+    INTERNAL_IPS = [ "127.0.0.1"]
+
+
+class Prod(Dev):
+    DEBUG = False
+    SECRET_KEY = ''
